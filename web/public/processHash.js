@@ -9,20 +9,17 @@ if (!hash) {
 }
 
 const hashSplit = hash.match(/.{1,6}/g)
-const iterations = parseInt(hashSplit[hashSplit.length - 1])
+// If iterations is 0 then we put it at 1 (if we don't it would result in a blank canvas)
+const iterations = parseInt(hashSplit[hashSplit.length - 1], 16) == 0 ? 1 : parseInt(hashSplit[hashSplit.length - 1], 16)
 
 const canvas = document.getElementById('hashProcessingCanvas')
 const context = canvas.getContext('2d')
 
-console.log(iterations)
-
 ;(async () => {
     let currentHash = hash
     for (let it = 0; it < iterations; it ++) {
-        let hash = sha512(currentHash)
         fillWithHash(currentHash, context)
         currentHash = await sha512(currentHash)
-        await new Promise((resolve) => setTimeout(resolve, 50))
     }
     console.log(`Done ${iterations} iterations !`)
 })()
@@ -39,10 +36,10 @@ function fillWithHash(hash, canvasContext) {
     const xCoords = hashSplit.slice(0, - 1).map((hex) => parseInt(hex.slice(0, 2), 16) + parseInt(hex.slice(2, 4), 16) + parseInt(hex.slice(4, 6), 16))
 
     for (let i = 0; i < 210; i += 10) {
-        context.fillStyle = colors[i / 10]
+        canvasContext.fillStyle = colors[i / 10]
         // We use the color at index i / 10
         // We use the x coordinate at index i / 10 REVERSED (first color with last xCoord)
-        context.fillRect(xCoords[xCoords.length - (i / 10) - 1], i, 10, 10)
+        canvasContext.fillRect(xCoords[xCoords.length - (i / 10) - 1], i, 10, 10)
     }
 }
 
