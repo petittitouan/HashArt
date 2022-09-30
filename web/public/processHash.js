@@ -50,10 +50,16 @@ function fillWithHash(hash, canvasContext) {
         canvasContext.fillStyle = colors[i / 10]
         // We use the color at index i / 10
         // We use the x coordinate at index i / 10 REVERSED (first color with last xCoord)
+        // To prevent having all bright colors to the right and dark colors to the left
         canvasContext.fillRect(xCoords[xCoords.length - i / 10 - 1], i, 10, 10)
     }
 }
 
+/**
+ * Hash String with the SHA512 algorithm
+ * @param {string} string String to Hash
+ * @returns The SHA512 hash of the provided String
+ */
 async function sha512(string) {
     // GET to /hash with query param toHash
     return (await fetch(`/hash?toHash=${encodeURIComponent(string)}`)).text()
