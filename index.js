@@ -1,10 +1,10 @@
 const path = require('path')
-
 const { sha512 } = require('js-sha512')
-
 const fileUpload = require('express-fileupload')
 const express = require('express')
 const app = express()
+
+const PORT = 8080
 
 app.use(express.static(path.resolve(__dirname, 'web', 'public')))
 app.use(fileUpload())
@@ -29,4 +29,6 @@ app.get('/hash', (req, res) => {
     res.send(sha512(toHash))
 })
 
-app.listen(8080)
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`)
+})
